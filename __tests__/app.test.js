@@ -75,7 +75,10 @@ describe("/api/articles/:article_id", () => {
   });
   describe("PATCH /api/articles/:article_id", () => {
     test("200: responds with the data object for the updated article as requested", async () => {
-      const { body } = await request(app).patch("/api/articles/6").expect(200);
+      const { body } = await request(app)
+        .patch("/api/articles/6")
+        .send({ inc_votes: 15 })
+        .expect(200);
       expect(body.article).toEqual(
         expect.objectContaining({
           author: expect.any(String),
@@ -91,10 +94,36 @@ describe("/api/articles/:article_id", () => {
     });
 
     test("200: number of votes gets increased by the newVote if passed in request body", async () => {
-      const prevVotes = req.body.inc_count;
-      const newVote = 5;
-      const { body } = await request(app).patch("/api/articles/6").expect(200);
-      expect(body.article.votes).toBe();
+      const prevVotes = 0;
+
+      const { body } = await request(app)
+        .patch("/api/articles/6")
+        .send({ inc_votes: 15 })
+        .expect(200);
+      expect(body.article.votes).toBe(15);
+    });
+
+    test('400: "bad request" - for an invalid number of votes', async () => {
+      const { body } = await request(app)
+        .patch("/api/articles/not_an_article_id")
+        .send({ inc_votes: "not_a_number" })
+        .expect(400);
+      expect(body.msg).toBe("Bad request! (PSQL 22P02)");
+    });
+
+    test('400: "bad request" - for request with no "inc_votes" on the request body', async () => {
+      const { body } = await request(app)
+        .patch("/api/articles/6")
+        .send({ random_key: 13 })
+        .expect(400);
+      expect(body.msg).toBe("invalid request body");
+    });
+    test('400: "bad request" - for request with other keys in addition to "inc_votes" on the request body', async () => {
+      const { body } = await request(app)
+        .patch("/api/articles/6")
+        .send({ inc_votes: 15, random_key: "shouldn't be here" })
+        .expect(400);
+      expect(body.msg).toBe("invalid request body");
     });
   });
 });

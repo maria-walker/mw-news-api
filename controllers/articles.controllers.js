@@ -1,4 +1,7 @@
-const { selectArticleById } = require("../models/articles.models");
+const {
+  selectArticleById,
+  addVotesToArticle,
+} = require("../models/articles.models");
 
 function getArticleById(req, res, next) {
   const { article_id } = req.params;
@@ -13,8 +16,9 @@ function getArticleById(req, res, next) {
 function patchArticleWithVotes(req, res, next) {
   const { article_id } = req.params;
   const newVote = req.body.inc_votes;
+  const numberOfPropsOnRequestBody = Object.keys(req.body).length;
 
-  addVotesToArticle(article_id, newVote)
+  addVotesToArticle(article_id, newVote, numberOfPropsOnRequestBody)
     .then((article) => {
       res.status(200).send({ article: article });
     })

@@ -16,9 +16,6 @@ exports.formatUsers = (userData) => {
 
 exports.formatArticles = (articleData) => {
   return articleData.map((article) => {
-    // console.log(Object.keys(articleData).includes("votes"));
-    //console.log(Object.keys(articleData));
-    //console.log(article);
     if (Object.keys(article).includes("votes")) {
       return [
         article.title,
