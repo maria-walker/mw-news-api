@@ -16,13 +16,28 @@ exports.formatUsers = (userData) => {
 
 exports.formatArticles = (articleData) => {
   return articleData.map((article) => {
-    return [
-      article.title,
-      article.body,
-      article.topic,
-      article.author,
-      article.created_at,
-    ];
+    // console.log(Object.keys(articleData).includes("votes"));
+    //console.log(Object.keys(articleData));
+    //console.log(article);
+    if (Object.keys(article).includes("votes")) {
+      return [
+        article.title,
+        article.body,
+        article.votes,
+        article.topic,
+        article.author,
+        article.created_at,
+      ];
+    } else {
+      return [
+        article.title,
+        article.body,
+        0,
+        article.topic,
+        article.author,
+        article.created_at,
+      ];
+    }
   });
 };
 

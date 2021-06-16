@@ -1,0 +1,22 @@
+You are now connected to database "nc_news_test" as user "maria".
+ article_id |                         title                          | votes 
+------------+--------------------------------------------------------+-------
+          1 | Living in the shadow of a great man                    |   100
+          2 | Sony Vaio; or, The Laptop                              |     0
+          3 | Eight pug gifs that remind me of mitch                 |     0
+          4 | Student SUES Mitch!                                    |     0
+          5 | UNCOVERED: catspiracy to bring down democracy          |     0
+          6 | A                                                      |     0
+          7 | Z                                                      |     0
+          8 | Does Mitch predate civilisation?                       |     0
+          9 | They're not exactly dogs, are they?                    |     0
+         10 | Seven inspirational thought leaders from Manchester UK |     0
+         11 | Am I a cat?                                            |     0
+         12 | Moustache                                              |     0
+(12 rows)
+
+ article_id |                title                |         body          | votes | topic |    author     |     created_at      | number_of_comments 
+------------+-------------------------------------+-----------------------+-------+-------+---------------+---------------------+--------------------
+          9 | They're not exactly dogs, are they? | Well? Think about it. |     0 | mitch | butter_bridge | 2020-06-06 10:10:00 |                  2
+(1 row)
+

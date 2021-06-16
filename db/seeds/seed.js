@@ -64,10 +64,11 @@ const seed = async (data) => {
   const userResult = await db.query(usersInsertStr);
 
   const articleValues = formatArticles(articleData);
+  // console.log(articleValues);
 
   const articlesInsertStr = format(
     `
-  INSERT INTO articles (title, body, topic, author, created_at) VALUES %L RETURNING *;`,
+  INSERT INTO articles (title, body, votes, topic, author, created_at) VALUES %L RETURNING *;`,
     articleValues
   );
 
