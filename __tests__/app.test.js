@@ -48,17 +48,17 @@ describe("GET /api/users/:username", () => {
 describe("/api/articles/:article_id", () => {
   describe("GET /api/articles/:article_id", () => {
     test("200: responds with the data object for the required article", async () => {
-      const { body } = await request(app).get("/api/articles/6").expect(200);
+      const { body } = await request(app).get("/api/articles/9").expect(200);
       expect(body.article).toEqual(
         expect.objectContaining({
           author: expect.any(String),
-          title: expect.any(String),
+          title: "They're not exactly dogs, are they?",
           article_id: expect.any(Number),
           body: expect.any(String),
           topic: expect.any(String),
           created_at: expect.any(String /*Date*/),
           votes: expect.any(Number),
-          comment_count: expect.any(Number),
+          comment_count: 2,
         })
       );
     });
@@ -124,6 +124,26 @@ describe("/api/articles/:article_id", () => {
         .send({ inc_votes: 15, random_key: "shouldn't be here" })
         .expect(400);
       expect(body.msg).toBe("invalid request body");
+    });
+  });
+});
+
+describe("GET /api/articles", () => {
+  test("200: responds with an array of articles, with specified properties", async () => {
+    const { body } = await request(app).get("/api/articles").expect(200);
+    // expect(body.articles.length).toBe(36);
+    body.articles.forEach((article) => {
+      expect(article).toEqual(
+        expect.objectContaining({
+          author: expect.any(String),
+          title: expect.any(String),
+          article_id: expect.any(Number),
+          topic: expect.any(String),
+          created_at: expect.any(String /*Date*/),
+          votes: expect.any(Number),
+          comment_count: expect.any(Number),
+        })
+      );
     });
   });
 });

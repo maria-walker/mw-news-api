@@ -1,5 +1,31 @@
 const db = require("../db/connection");
 
+exports.fetchArticles = async () => {
+  let query_values = [];
+  let queryStr = `SELECT articles.*, COUNT (comment_id) AS comment_count
+  FROM articles
+  LEFT JOIN comments ON articles.article_id = comments.article_id
+  `;
+
+  // if (article_id) {
+  //   queryStr += ` WHERE articles.article_id = $1`;
+  //   query_values.push(article_id);
+  // }
+
+  queryStr += ` GROUP BY articles.article_id`;
+
+  const allArticles = await db.query(queryStr, query_values);
+
+  const articlesToReturn = allArticles.rows;
+
+  articlesToReturn.forEach((article) => {
+    article.comment_count = +article.comment_count;
+    delete article.body;
+  });
+
+  return articlesToReturn;
+};
+
 exports.selectArticleById = async (article_id) => {
   let query_values = [];
   let queryStr = `SELECT articles.*, COUNT (comment_id) AS comment_count
