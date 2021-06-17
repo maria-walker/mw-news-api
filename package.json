@@ -9,6 +9,11 @@
     "test": "jest",
     "view-test-db": "psql -f view-test-db.sql > view-test-db.txt"
   },
+  "jest": {
+    "setupFilesAfterEnv": [
+      "jest-sorted"
+    ]
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/northcoders/be-nc-news.git"
@@ -28,6 +33,7 @@
   },
   "devDependencies": {
     "jest": "^27.0.4",
+    "jest-sorted": "^1.0.12",
     "supertest": "^6.1.3"
   }
 }

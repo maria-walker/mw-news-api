@@ -131,7 +131,7 @@ describe("/api/articles/:article_id", () => {
 describe("GET /api/articles", () => {
   test("200: responds with an array of articles, with specified properties", async () => {
     const { body } = await request(app).get("/api/articles").expect(200);
-    // expect(body.articles.length).toBe(36);
+    expect(body.articles.length).toBe(12);
     body.articles.forEach((article) => {
       expect(article).toEqual(
         expect.objectContaining({
@@ -145,5 +145,52 @@ describe("GET /api/articles", () => {
         })
       );
     });
+  });
+  test("200: articles are sorted by date (descending) by default ", async () => {
+    const { body } = await request(app).get("/api/articles").expect(200);
+    expect(body.articles[0].article_id).toBe(3);
+    expect(body.articles).toBeSortedBy("created_at", { descending: true });
+  });
+  test("200: articles are sorted according to sort_by query(if provided) and order (if provided) ", async () => {
+    const { body } = await request(app)
+      .get("/api/articles?sort_by=article_id&order=asc")
+      .expect(200);
+
+    expect(body.articles[0].article_id).toBe(1);
+
+    expect(body.articles).toBeSortedBy("article_id", { ascending: true });
+  });
+  test("200: articles are filtered by topic(if provided) and sorted according to sort_by query(if provided) and order (if provided)", async () => {
+    const { body } = await request(app)
+      .get("/api/articles?topic=cats&sort_by=article_id&order=asc")
+      .expect(200);
+
+    expect(body.articles[0].article_id).toBe(5);
+    expect(body.articles[0].topic).toBe("cats");
+    expect(body.articles).toBeSortedBy("article_id", { ascending: true });
+  });
+  test('400: "bad request" - for an invalid sort_by column', async () => {
+    const { body } = await request(app)
+      .get("/api/articles?sort_by=not_a_column")
+      .expect(400);
+    expect(body.msg).toBe("Invalid sort query: column doesn't exist");
+  });
+  test('400: "bad request" - for an invalid order query', async () => {
+    const { body } = await request(app)
+      .get("/api/articles?order=not_asc_or_desc")
+      .expect(400);
+    expect(body.msg).toBe("Invalid order query");
+  });
+  test('404: "topic not found" - for filtering by non-existent topic', async () => {
+    const { body } = await request(app)
+      .get("/api/articles?topic=dogs")
+      .expect(404);
+    expect(body.msg).toBe("Topic not found");
+  });
+  test("200: empty array for filtering by an existing topic that doesn't have any articles attributed to it", async () => {
+    const { body } = await request(app)
+      .get("/api/articles?topic=paper")
+      .expect(200);
+    expect(body.articles).toHaveLength(0);
   });
 });
