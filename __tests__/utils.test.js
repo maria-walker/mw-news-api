@@ -108,90 +108,92 @@ describe("formatUsers()", () => {
     formatUsers(input);
     expect(input).toEqual(unmutatedInput);
   });
+});
 
-  describe("formatArticles()", () => {
-    test("returns an empty array if no articles are passed ", () => {
-      expect(formatArticles([])).toEqual([]);
-    });
-    test("each article obj is replaces with an array ", () => {
-      const input = [
-        {
-          title: "They're not exactly dogs, are they?",
-          topic: "mitch",
-          author: "butter_bridge",
-          body: "Well? Think about it.",
-          created_at: new Date(1591438200000),
-        },
-        {
-          title: "Seven inspirational thought leaders from Manchester UK",
-          topic: "mitch",
-          author: "rogersop",
-          body: "Who are we kidding, there is only one, and it's Mitch!",
-          created_at: new Date(1589433300000),
-        },
-      ];
+describe("formatArticles()", () => {
+  test("returns an empty array if no articles are passed ", () => {
+    expect(formatArticles([])).toEqual([]);
+  });
+  test("each article obj is replaces with an array, with votes added at 0, unless specified otherwise ", () => {
+    const input = [
+      {
+        title: "They're not exactly dogs, are they?",
+        topic: "mitch",
+        author: "butter_bridge",
+        body: "Well? Think about it.",
+        created_at: new Date(1591438200000),
+      },
+      {
+        title: "Seven inspirational thought leaders from Manchester UK",
+        topic: "mitch",
+        author: "rogersop",
+        body: "Who are we kidding, there is only one, and it's Mitch!",
+        created_at: new Date(1589433300000),
+      },
+    ];
 
-      const actual = formatArticles(input);
+    const actual = formatArticles(input);
 
-      const expected = [
-        [
-          "They're not exactly dogs, are they?",
-          "Well? Think about it.",
-          "mitch",
-          "butter_bridge",
-          new Date(1591438200000),
-        ],
-        [
-          "Seven inspirational thought leaders from Manchester UK",
-          "Who are we kidding, there is only one, and it's Mitch!",
-          "mitch",
-          "rogersop",
-          new Date(1589433300000),
-        ],
-      ];
-      expect(actual).toEqual(expected);
-    });
-    test("does not mutate the input data", () => {
-      const input = [
-        {
-          title: "They're not exactly dogs, are they?",
-          topic: "mitch",
-          author: "butter_bridge",
-          body: "Well? Think about it.",
-          created_at: new Date(1591438200000),
-        },
-        {
-          title: "Seven inspirational thought leaders from Manchester UK",
-          topic: "mitch",
-          author: "rogersop",
-          body: "Who are we kidding, there is only one, and it's Mitch!",
-          created_at: new Date(1589433300000),
-        },
-      ];
+    const expected = [
+      [
+        "They're not exactly dogs, are they?",
+        "Well? Think about it.",
+        0,
+        "mitch",
+        "butter_bridge",
+        new Date(1591438200000),
+      ],
+      [
+        "Seven inspirational thought leaders from Manchester UK",
+        "Who are we kidding, there is only one, and it's Mitch!",
+        0,
+        "mitch",
+        "rogersop",
+        new Date(1589433300000),
+      ],
+    ];
+    expect(actual).toEqual(expected);
+  });
+  test("does not mutate the input data", () => {
+    const input = [
+      {
+        title: "They're not exactly dogs, are they?",
+        topic: "mitch",
+        author: "butter_bridge",
+        body: "Well? Think about it.",
+        created_at: new Date(1591438200000),
+      },
+      {
+        title: "Seven inspirational thought leaders from Manchester UK",
+        topic: "mitch",
+        author: "rogersop",
+        body: "Who are we kidding, there is only one, and it's Mitch!",
+        created_at: new Date(1589433300000),
+      },
+    ];
 
-      const unmutatedInput = [
-        {
-          title: "They're not exactly dogs, are they?",
-          topic: "mitch",
-          author: "butter_bridge",
-          body: "Well? Think about it.",
-          created_at: new Date(1591438200000),
-        },
-        {
-          title: "Seven inspirational thought leaders from Manchester UK",
-          topic: "mitch",
-          author: "rogersop",
-          body: "Who are we kidding, there is only one, and it's Mitch!",
-          created_at: new Date(1589433300000),
-        },
-      ];
-      formatArticles(input);
-      expect(input).toEqual(unmutatedInput);
-    });
+    const unmutatedInput = [
+      {
+        title: "They're not exactly dogs, are they?",
+        topic: "mitch",
+        author: "butter_bridge",
+        body: "Well? Think about it.",
+        created_at: new Date(1591438200000),
+      },
+      {
+        title: "Seven inspirational thought leaders from Manchester UK",
+        topic: "mitch",
+        author: "rogersop",
+        body: "Who are we kidding, there is only one, and it's Mitch!",
+        created_at: new Date(1589433300000),
+      },
+    ];
+    formatArticles(input);
+    expect(input).toEqual(unmutatedInput);
   });
 });
 
-describe.only("formatComments()", () => {
+describe("formatComments()", () => {
   test("returns an empty array if no comments are passed ", () => {
     expect(formatComments([], [])).toEqual([]);
   });

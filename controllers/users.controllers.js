@@ -5,8 +5,7 @@ function getUserByUsername(req, res, next) {
 
   selectUserByUsername(username)
     .then((user) => {
-      //console.log("user in controller", user);
-      res.status(200).send({ user: user });
+      res.status(200).send({ user });
     })
     .catch(next);
 }

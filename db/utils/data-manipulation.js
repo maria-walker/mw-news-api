@@ -1,8 +1,4 @@
-// extract any functions you are using to manipulate your data, into this file
 exports.formatTopics = (topicData) => {
-  //   return topicData.map(({ slug, description }) => {
-  //     return [slug, description];
-  //   });
   return topicData.map((topic) => {
     return [topic.slug, topic.description];
   });

@@ -69,20 +69,11 @@ exports.fetchArticles = async (sort_by, order, topic) => {
 };
 
 exports.selectArticleById = async (article_id) => {
-  let query_values = [];
   let queryStr = `SELECT articles.*, COUNT (comment_id) AS comment_count
   FROM articles
-  LEFT JOIN comments ON articles.article_id = comments.article_id
-  `;
+  LEFT JOIN comments ON articles.article_id = comments.article_id WHERE articles.article_id = $1 GROUP BY articles.article_id`;
 
-  if (article_id) {
-    queryStr += ` WHERE articles.article_id = $1`;
-    query_values.push(article_id);
-  }
-
-  queryStr += `GROUP BY articles.article_id`;
-
-  const articleResult = await db.query(queryStr, query_values);
+  const articleResult = await db.query(queryStr, [article_id]);
 
   if (articleResult.rows.length === 0) {
     return Promise.reject({ status: 404, msg: "article not found" });
@@ -103,7 +94,7 @@ exports.addVotesToArticle = async (
 ) => {
   const article = await exports.selectArticleById(article_id);
 
-  if (newVote === undefined || numberOfPropsOnRequestBody > 1) {
+  if (!newVote || numberOfPropsOnRequestBody > 1) {
     return Promise.reject({ status: 400, msg: "invalid request body" });
   }
 

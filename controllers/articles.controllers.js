@@ -9,7 +9,7 @@ function getArticleById(req, res, next) {
 
   selectArticleById(article_id)
     .then((article) => {
-      res.status(200).send({ article: article });
+      res.status(200).send({ article });
     })
     .catch(next);
 }
@@ -21,7 +21,7 @@ function patchArticleWithVotes(req, res, next) {
 
   addVotesToArticle(article_id, newVote, numberOfPropsOnRequestBody)
     .then((article) => {
-      res.status(200).send({ article: article });
+      res.status(200).send({ article });
     })
     .catch(next);
 }
@@ -35,7 +35,7 @@ function getArticles(req, res, next) {
 
   fetchArticles(sort_by, order, topic)
     .then((articles) => {
-      res.status(200).send({ articles: articles });
+      res.status(200).send({ articles });
     })
     .catch(next);
 }

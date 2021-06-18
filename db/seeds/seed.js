@@ -7,10 +7,9 @@ const {
   formatComments,
 } = require("../utils/data-manipulation.js");
 
-// 1. create tables
-// 2. insert data
-
 const seed = async (data) => {
+  // 1. create tables
+
   const { articleData, commentData, topicData, userData } = data;
 
   await db.query(`DROP TABLE IF EXISTS comments;`);
@@ -23,35 +22,37 @@ const seed = async (data) => {
     description VARCHAR(255) NOT NULL);`);
 
   await db.query(`CREATE TABLE users (
-    username VARCHAR(255) PRIMARY KEY NOT NULL,
-    avatar_url VARCHAR(255) NOT NULL,
-    name VARCHAR(255) NOT NULL);`);
+      username VARCHAR(255) PRIMARY KEY NOT NULL,
+      avatar_url VARCHAR(255) NOT NULL,
+      name VARCHAR(255) NOT NULL);`);
 
   await db.query(`CREATE TABLE articles (
-    article_id SERIAL PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    body TEXT NOT NULL,
-    votes INT DEFAULT 0,
-    topic VARCHAR(255) NOT NULL REFERENCES topics(slug),
-    author VARCHAR(255) NOT NULL REFERENCES users(username),
-    created_at TIMESTAMP DEFAULT current_timestamp);`);
+        article_id SERIAL PRIMARY KEY,
+        title VARCHAR(255) NOT NULL,
+        body TEXT NOT NULL,
+        votes INT DEFAULT 0,
+        topic VARCHAR(255) NOT NULL REFERENCES topics(slug),
+        author VARCHAR(255) NOT NULL REFERENCES users(username),
+        created_at TIMESTAMP DEFAULT current_timestamp);`);
 
   await db.query(`CREATE TABLE comments (
-    comment_id SERIAL PRIMARY KEY,
-    author VARCHAR(255) NOT NULL REFERENCES users(username),
-    article_id INT NOT NULL REFERENCES articles(article_id),
-    votes INT DEFAULT 0,
-    created_at TIMESTAMP DEFAULT current_timestamp,
-    body TEXT NOT NULL);`);
+          comment_id SERIAL PRIMARY KEY,
+          author VARCHAR(255) NOT NULL REFERENCES users(username),
+          article_id INT NOT NULL REFERENCES articles(article_id),
+          votes INT DEFAULT 0,
+          created_at TIMESTAMP DEFAULT current_timestamp,
+          body TEXT NOT NULL);`);
 
   const topicValues = formatTopics(topicData);
+
+  // 2. insert data
 
   const topicsInsertStr = format(
     `INSERT INTO topics (slug, description) VALUES %L RETURNING *;`,
     topicValues
   );
 
-  const topicResult = await db.query(topicsInsertStr);
+  await db.query(topicsInsertStr);
 
   const userValues = formatUsers(userData);
 
@@ -61,10 +62,9 @@ const seed = async (data) => {
     userValues
   );
 
-  const userResult = await db.query(usersInsertStr);
+  await db.query(usersInsertStr);
 
   const articleValues = formatArticles(articleData);
-  // console.log(articleValues);
 
   const articlesInsertStr = format(
     `
@@ -82,7 +82,7 @@ const seed = async (data) => {
     commentValues
   );
 
-  const commentResult = await db.query(commentsInsertStr);
+  await db.query(commentsInsertStr);
 };
 
 module.exports = seed;
