@@ -1,5 +1,7 @@
 \c nc_news_test
 
+    select * from comments;
+    
     select * from articles;
     
     SELECT articles.*, COUNT (comment_id) AS comment_count

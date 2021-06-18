@@ -6,6 +6,10 @@ const {
   getArticles,
 } = require("../controllers/articles.controllers");
 
+const { getCommentsByArticle } = require("../controllers/comments.controllers");
+
+//const commentsRouter = require("./comments.router.js");
+
 const articlesRouter = express.Router();
 
 articlesRouter.route("/").get(getArticles);
@@ -14,5 +18,8 @@ articlesRouter
   .route("/:article_id")
   .get(getArticleById)
   .patch(patchArticleWithVotes);
+
+articlesRouter.route("/:article_id/comments").get(getCommentsByArticle);
+//.post(postComment);
 
 module.exports = articlesRouter;

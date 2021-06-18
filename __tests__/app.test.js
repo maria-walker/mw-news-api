@@ -194,3 +194,91 @@ describe("GET /api/articles", () => {
     expect(body.articles).toHaveLength(0);
   });
 });
+
+describe("/api/articles/:article_id/comments", () => {
+  describe("GET /api/articles/:article_id/comments", () => {
+    test("200: responds with an array of comments, with specified properties", async () => {
+      const { body } = await request(app)
+        .get("/api/articles/9/comments")
+        .expect(200);
+      expect(body.comments.length).toBe(2);
+      body.comments.forEach((comment) => {
+        expect(comment).toEqual(
+          expect.objectContaining({
+            comment_id: expect.any(Number),
+            votes: expect.any(Number),
+            created_at: expect.any(String /*Date*/),
+            author: expect.any(String),
+            body: expect.any(String),
+          })
+        );
+      });
+    });
+    test('400: "bad request" - for an invalid article_id', async () => {
+      const { body } = await request(app)
+        .get("/api/articles/not_an_article_id/comments")
+        .expect(400);
+      expect(body.msg).toBe("Bad request! (PSQL 22P02)");
+    });
+    test('404: "article not found" - for a valid but non-existent article_id', async () => {
+      const { body } = await request(app)
+        .get("/api/articles/9999/comments")
+        .expect(404);
+      expect(body.msg).toBe("article not found");
+    });
+    test("200: empty array for article with no comments", async () => {
+      const { body } = await request(app)
+        .get("/api/articles/2/comments")
+        .expect(200);
+      expect(body.comments).toHaveLength(0);
+    });
+  });
+});
+
+// describe("POST /api/articles/:article_id/comments", () => {
+//   test("204: responds with the posted comment", async () => {
+//     const { body } = await request(app)
+//       .post("/api/articles/1/comments")
+//       .send({ username: "lurker", body: "this is my comment for article 1" })
+//       .expect(204);
+//     expect(body.comment).toEqual(
+//       expect.objectContaining({
+//         author: expect.any(String),
+//         body: expect.any(String),
+//       })
+//     );
+//   });
+
+//   test("204: increases number of comments for the relevant article", async () => {
+//     const prevVotes = 0;
+
+//     const { body } = await request(app)
+//     .post("/api/articles/1/comments")
+//     .send({ username: "lurker", body: "this is my comment for article 1" })
+//       .expect(204);
+//     expect(comment_count).toBe(1);
+//   });
+
+//   test('400: "bad request" - for an invalid number of votes', async () => {
+//     const { body } = await request(app)
+//       .patch("/api/articles/not_an_article_id")
+//       .send({ inc_votes: "not_a_number" })
+//       .expect(400);
+//     expect(body.msg).toBe("Bad request! (PSQL 22P02)");
+//   });
+
+//   test('400: "bad request" - for request with no "inc_votes" on the request body', async () => {
+//     const { body } = await request(app)
+//       .patch("/api/articles/6")
+//       .send({ random_key: 13 })
+//       .expect(400);
+//     expect(body.msg).toBe("invalid request body");
+//   });
+//   test('400: "bad request" - for request with other keys in addition to "inc_votes" on the request body', async () => {
+//     const { body } = await request(app)
+//       .patch("/api/articles/6")
+//       .send({ inc_votes: 15, random_key: "shouldn't be here" })
+//       .expect(400);
+//     expect(body.msg).toBe("invalid request body");
+//   });
+//});
