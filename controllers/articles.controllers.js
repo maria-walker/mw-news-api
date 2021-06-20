@@ -27,10 +27,6 @@ function patchArticleWithVotes(req, res, next) {
 }
 
 function getArticles(req, res, next) {
-  //sort_by
-  //order
-  //topic
-
   const { sort_by, order, topic } = req.query;
 
   fetchArticles(sort_by, order, topic)

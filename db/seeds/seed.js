@@ -8,8 +8,6 @@ const {
 } = require("../utils/data-manipulation.js");
 
 const seed = async (data) => {
-  // 1. create tables
-
   const { articleData, commentData, topicData, userData } = data;
 
   await db.query(`DROP TABLE IF EXISTS comments;`);
@@ -44,8 +42,6 @@ const seed = async (data) => {
           body TEXT NOT NULL);`);
 
   const topicValues = formatTopics(topicData);
-
-  // 2. insert data
 
   const topicsInsertStr = format(
     `INSERT INTO topics (slug, description) VALUES %L RETURNING *;`,
